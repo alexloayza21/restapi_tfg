@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 
 const asientoSchema = new Schema({
-    
     nombre: Number,
     fecha: Date,
     hora_entrada: String,
@@ -11,7 +10,6 @@ const asientoSchema = new Schema({
         enum: ['libre', 'ocupado', 'dudoso'],
         default: 'libre'
     }
-
 });
 
 module.exports = model('asientos', asientoSchema);

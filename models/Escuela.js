@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const Aula = require('./Aula');
+const Aula = require('./Aula').schema;
 
 const escuelaSchema = new Schema({
     nombre: String,

@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const reservas = require('./Reserva');
+const Reserva = require('./Reserva');
 
 let userSchema = new Schema({
     username: {
@@ -30,7 +30,7 @@ let userSchema = new Schema({
         required: true
     },
 
-    reservas: [reservas]
+    reservas: [Reserva]
 });
 
 //* encriptar contraseña
