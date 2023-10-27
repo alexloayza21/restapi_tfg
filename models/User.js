@@ -14,14 +14,14 @@ let userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        min: 1,
+        minlength: 1,
         trim: true
     },
 
     password:{
         type: String,
         required: true,
-        min: 6,
+        minlength: 6,
         trim: true
     },
 
