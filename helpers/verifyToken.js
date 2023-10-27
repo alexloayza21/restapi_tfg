@@ -5,8 +5,8 @@ function verifyToken(req, res, next) {
     let token = req.headers['authorization'];
     if (!token) {
         return res.status(500).json({
-            autuh: false,
-            message: 'No token provided'
+            auth: false,
+            errorMessage: 'No token provided'
         });
     }
 
