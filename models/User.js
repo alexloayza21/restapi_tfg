@@ -1,6 +1,8 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const reservas = require('./Reserva');
+
 let userSchema = new Schema({
     username: {
         type: String,
@@ -26,7 +28,9 @@ let userSchema = new Schema({
     admin: {
         type: Boolean,
         required: true
-    }
+    },
+
+    reservas: [reservas]
 });
 
 //* encriptar contraseña
