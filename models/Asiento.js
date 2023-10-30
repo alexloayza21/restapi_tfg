@@ -8,6 +8,7 @@ const asientoSchema = new Schema({
     estado: {
         type: String,
         enum: ['libre', 'ocupado', 'dudoso'],
+        default: 'libre'
     },
     idAula: {
         type: String, 
