@@ -8,7 +8,7 @@ const verifyToken = require('../helpers/verifyToken');
 const User = require('../models/User');
 
 //* registrar
-router.post('/signup', async (req, res, next) => {
+router.post('/signup', async (req, res) => {
     const { username, email, password, admin } = req.body;
     
     if (password.length < 6) {
@@ -22,9 +22,7 @@ router.post('/signup', async (req, res, next) => {
         const token = jwt.sign({ id: user._id }, config.secret, {});
         res.status(200).json({auth: true, token})
     }).catch(error => {
-        if (!user.admin) {
-            return res.status(500).json({ ok: false, errorMessage: 'Admin es obligatorio' });
-        }
+        return res.status(500).json({ ok: false, errorMessage: 'Error Guardando Usuario' });
     });
 });
 
@@ -49,7 +47,7 @@ router.post('/signin', async (req, res, next) => {
 
 //* perfil
 router.get('/usuario', verifyToken, async (req, res, next) => {
-    const user = await User.findById(req.userId, {password: 0}).then(usuario => {
+    await User.findById(req.userId, {password: 0}).then(usuario => {
         if (usuario) {
             return res.status(200).json(usuario);
         } else {

@@ -7,7 +7,7 @@ const reservaSchema = new Schema({
     hora_entrada: String,
     hora_salida: String,
     asientos: [Asiento],
-    child: User
+    user: User
 });
 
 module.exports = model('reservas', reservaSchema);
