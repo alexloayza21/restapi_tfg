@@ -6,9 +6,10 @@ const Asiento = require('../models/Asiento');
 const Escuela = require('../models/Escuela');
 
 //*post asiento
-router.post('/newAsiento', async (req, res) => {
-    const { idAsiento, numeroAsiento, idAula } = req.body;
-    const newAsiento = Asiento({ idAsiento, numeroAsiento, idAula });
+router.post('/newAsiento/:idAula', async (req, res) => {
+    const { idAula } = req.params;
+    const { numeroAsiento } = req.body;
+    const newAsiento = Asiento({ numeroAsiento, idAula });
 
     if (!idAula) { return res.status(500).json({ ok: false, errorMessage: 'El idAula es Requerido' }) };
 
@@ -23,12 +24,16 @@ router.post('/newAsiento', async (req, res) => {
         aula.asientos.push(newAsiento);
         aula.save();
 
-        Escuela.findOneAndUpdate({ idEscuela: aula.idEscuela },
-            {
-                $set: {
-                aulas: aula
-            }
-        }).then().catch(err => {
+        Escuela.findOne({ idEscuela: aula.idEscuela }).then(escuela => {
+            escuela.aulas.forEach(aula => {
+                if (aula.idAula === idAula) {                  
+                    aula.asientos.push(newAsiento);
+                    aula.save();
+                    escuela.save();
+                }
+            });
+
+        }).catch(err => {
             res.status(500).json({ok: false, errorMessage: 'ERRO AÑADIENDO ASIENTO A AULA'})
         });
 

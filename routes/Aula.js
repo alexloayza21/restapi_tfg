@@ -5,8 +5,9 @@ const Escuela = require('../models/Escuela');
 const Aula = require('../models/Aula');
 
 //* post aula
-router.post('/newAula', async (req, res) => {
-    const { idAula, nombreAula, idEscuela } = req.body;
+router.post('/newAula/:idEscuela', async (req, res) => {
+    const { idEscuela } = req.params;
+    const { idAula, nombreAula } = req.body;
     const newAula = new Aula({ idAula, nombreAula, idEscuela });
 
     if (!idAula) { return res.status(500).json({ ok: false, errorMessage: 'El idAula es Requerido' }) };
