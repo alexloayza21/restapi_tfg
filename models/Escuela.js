@@ -6,11 +6,26 @@ const escuelaSchema = new Schema({
         type: String,
         required: true
     },
-    nombreEscuela: String,
-    direccion: String,
-    ciudad: String,
-    codigo_postal: String,
-    provincia: String,
+    nombreEscuela: {
+        type: String,
+        required: true
+    },
+    direccion: {
+        type: String,
+        required: true
+    },
+    ciudad: {
+        type: String,
+        required: true
+    },
+    codigo_postal: {
+        type: String,
+        required: true
+    },
+    provincia: {
+        type: String,
+        required: true
+    },
     aulas: [Aula]
 });
 

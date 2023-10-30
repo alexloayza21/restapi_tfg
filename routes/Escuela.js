@@ -9,6 +9,11 @@ router.post('/newEscuela', async (req, res) => {
     const nuevaEscuela = new Escuela({ idEscuela, nombreEscuela, direccion, ciudad, codigo_postal, provincia });
     
     if (!idEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El idEscuela es Requerido' }) };
+    if (!nombreEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El nombreEscuela es Requerido' }) };
+    if (!direccion) { return res.status(500).json({ ok: false, errorMessage: 'La direccion es Requerido' }) };
+    if (!ciudad) { return res.status(500).json({ ok: false, errorMessage: 'La ciudad es Requerido' }) };
+    if (!codigo_postal) { return res.status(500).json({ ok: false, errorMessage: 'El codigo_postal es Requerido' }) };
+    if (!provincia) { return res.status(500).json({ ok: false, errorMessage: 'El provincia es Requerido' }) };
     
     const escuelas = await Escuela.find();
     for (let i = 0; i < escuelas.length; i++) {
