@@ -15,7 +15,7 @@ router.post('/signup', async (req, res, next) => {
         return res.status(500).json({ ok: false, errorMessage: 'La contaseña debe tener minimo 6 carácteres' });
     }
 
-    const user = User({ username, email, password, admin });
+    const user = new User({ username, email, password, admin });
     user.password = await user.encryptPassword(user.password);
 
     await user.save().then(result => {

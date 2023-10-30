@@ -2,7 +2,11 @@ const { Schema, model } = require('mongoose');
 const Aula = require('./Aula').schema;
 
 const escuelaSchema = new Schema({
-    nombre: String,
+    idEscuela: {
+        type: String,
+        required: true
+    },
+    nombreEscuela: String,
     direccion: String,
     ciudad: String,
     codigo_postal: String,
