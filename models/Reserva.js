@@ -3,7 +3,7 @@ const User = require('./User').schema;
 const Asiento = require('./Asiento').schema;
 
 const reservaSchema = new Schema({
-    fecha: Date,
+    fecha: String,
     hora_entrada: String,
     hora_salida: String,
     asientos: [Asiento],
