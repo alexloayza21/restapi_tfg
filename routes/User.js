@@ -56,5 +56,16 @@ router.get('/usuario', verifyToken, async (req, res, next) => {
     });
 });
 
+//* perfil
+router.get('/getReservasUsuarios', verifyToken, async (req, res, next) => {
+    await User.findById(req.userId, {password: 0}).then(usuario => {
+        if (usuario) {
+            return res.status(200).json(usuario.reservas);
+        } else {
+            return res.status(404).json({ok: false, errorMessage: 'User not found'})
+        }
+    });
+});
+
 
 module.exports = router;

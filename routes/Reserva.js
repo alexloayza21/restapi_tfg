@@ -29,11 +29,21 @@ router.post('/newReserva', verifyToken, async (req, res, next) => {
 
 });
 
+//* get todas las reservas
+router.get('/allReservas', (req, res) => {
+    Reserva.find().then(reservas => {
+        res.status(200).send(reservas);
+    }).catch(err => {
+        res.status(500).json({ ok: false, errorMessage: 'NO HAY RESERVAS' });
+    });
+});
+
+//* get reservas por fecha
 router.get('/reservasPorFecha/:date', (req, res) => {
 
     const fecha = req.params.date;
 
-    Reserva.find({ fecha },{user: 0, __v:0}).then(reservas => {
+    Reserva.find({ fecha },{user: 0, __v: 0}).then(reservas => {
         res.status(200).send(reservas);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO RESERVAS' });
