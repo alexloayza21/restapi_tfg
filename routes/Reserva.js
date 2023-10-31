@@ -3,7 +3,6 @@ const router = Router();
 
 const verifyToken = require('../helpers/verifyToken');
 const Reserva = require('../models/Reserva');
-const Asiento = require('../models/Asiento');
 const User = require('../models/User');
 
 //*post reserva
@@ -34,7 +33,7 @@ router.get('/reservasPorFecha/:date', (req, res) => {
 
     const fecha = req.params.date;
 
-    Reserva.find({ fecha },{user: 0}).then(reservas => {
+    Reserva.find({ fecha },{user: 0, __v:0}).then(reservas => {
         res.status(200).send(reservas);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO RESERVAS' });
