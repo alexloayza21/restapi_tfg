@@ -16,7 +16,14 @@ router.post('/newReserva', verifyToken, async (req, res, next) => {
     await User.findById(req.userId).then(usuario => {
         usuario.reservas.push(newReserva);
         usuario.save();
-        res.status(200).json({ ok: true });
+
+        Reserva.findByIdAndUpdate(newReserva._id,{
+            $set: {
+                user: usuario
+            }
+        }).then(reserva => {
+            res.status(200).json({ ok: true, reserva });
+        });
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR AGREGANDO RESERVAS A USUARIO' });
     });
