@@ -31,5 +31,15 @@ router.post('/newEscuela', async (req, res) => {
     });
 });
 
+//* get escuelas
+router.get('/allEscuelas', (req, res) => {
+    Escuela.find().then(escuelas => {
+        res.status(200).send(escuelas);
+    }).catch(err => {
+        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO LAS ESCUELAS' });
+    });
+});
+
+
 
 module.exports = router;

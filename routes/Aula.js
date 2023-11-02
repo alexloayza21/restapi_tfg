@@ -36,5 +36,14 @@ router.post('/newAula/:idEscuela', async (req, res) => {
     });
 });
 
+//* get aulas by idEscuela
+router.get('/getAula/:idEscuela', (req, res) => {
+    Aula.findOne({ idEscuela: req.params.idEscuela }).then(aulas => {
+        res.status(200).send(aulas);
+    }).catch(err => {
+        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULAS' });
+    });
+});
+
 
 module.exports = router;
