@@ -37,9 +37,18 @@ router.post('/newAula/:idEscuela', async (req, res) => {
 });
 
 //* get aulas by idEscuela
-router.get('/getAula/:idEscuela', (req, res) => {
-    Aula.findOne({ idEscuela: req.params.idEscuela }).then(aulas => {
+router.get('/getAllAulas/:idEscuela', (req, res) => {
+    Aula.find({ idEscuela: req.params.idEscuela }).then(aulas => {
         res.status(200).send(aulas);
+    }).catch(err => {
+        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULAS' });
+    });
+});
+
+//* get aula by id
+router.get('/getAulaById/:idAula', (req, res) => {
+    Aula.findOne({ idAula: req.params.idAula }).then(aulaa => {
+        res.status(200).send(aulaa);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULAS' });
     });
