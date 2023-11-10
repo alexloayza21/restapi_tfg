@@ -5,8 +5,8 @@ const Escuela = require('../models/Escuela');
 
 //* post escuela
 router.post('/newEscuela', async (req, res) => {
-    const { idEscuela, nombreEscuela, direccion, ciudad, codigo_postal, provincia } = req.body;
-    const nuevaEscuela = new Escuela({ idEscuela, nombreEscuela, direccion, ciudad, codigo_postal, provincia });
+    const { idEscuela, nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen } = req.body;
+    const nuevaEscuela = new Escuela({ idEscuela, nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen });
     
     if (!idEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El idEscuela es Requerido' }) };
     if (!nombreEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El nombreEscuela es Requerido' }) };
@@ -27,7 +27,7 @@ router.post('/newEscuela', async (req, res) => {
     nuevaEscuela.save().then(escuela => {
         res.status(200).json({ ok: true, escuela });
     }).catch( err => {
-        res.status(500).json({ ok: false, errorMessage: 'ERROR CREANDO ESCUELA' });
+        res.status(500).json({ ok: false, errorMessage: 'ERROR CREANDO ESCUELA' , err});
     });
 });
 

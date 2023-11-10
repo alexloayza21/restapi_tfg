@@ -12,6 +12,7 @@ router.post('/newAsiento/:idAula', async (req, res) => {
     const newAsiento = Asiento({ numeroAsiento, idAula });
 
     if (!idAula) { return res.status(500).json({ ok: false, errorMessage: 'El idAula es Requerido' }) };
+    if (numeroAsiento>20) { return res.status(500).json({ ok: false, errorMessage: 'Solo puede haber 20 asientos máximo' }) };
 
     const asientos = await Asiento.find({idAula});
     for (let i = 0; i < asientos.length; i++) {

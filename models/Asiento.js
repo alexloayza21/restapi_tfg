@@ -2,13 +2,8 @@ const { Schema, model } = require('mongoose');
 
 const asientoSchema = new Schema({
     numeroAsiento: Number,
-    fecha: Date,
     hora_entrada: String,
-    hora_salida: String,
-    estado: {
-        type: String,
-        enum: ['libre', 'ocupado', 'dudoso'],
-    },
+    hora_salida:String,
     idAula: {
         type: String, 
         required: true

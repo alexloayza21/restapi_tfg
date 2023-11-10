@@ -28,7 +28,7 @@ const escuelaSchema = new Schema({
     },
     imagen: {
         type: String,
-        required: true
+        required: false
     },
     aulas: [Aula]
 });
