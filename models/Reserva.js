@@ -7,7 +7,10 @@ const reservaSchema = new Schema({
     hora_entrada: String,
     hora_salida: String,
     asientos: [Asiento],
-    user: User
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    }
 });
 
 module.exports = model('reservas', reservaSchema);

@@ -7,20 +7,10 @@ const Aula = require('../models/Aula');
 //* post aula
 router.post('/newAula/:idEscuela', async (req, res) => {
     const { idEscuela } = req.params;
-    const { idAula, nombreAula } = req.body;
-    const newAula = new Aula({ idAula, nombreAula, idEscuela });
+    const { nombreAula } = req.body;
+    const newAula = new Aula({ nombreAula, idEscuela });
 
-    if (!idAula) { return res.status(500).json({ ok: false, errorMessage: 'El idAula es Requerido' }) };
     if (!idEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El idEscuela es Requerido' }) };
-
-    const aulas = await Aula.find();
-    for (let i = 0; i < aulas.length; i++) {
-        if (newAula.idAula === aulas[i].idAula) {
-            return res.status(500).json({ ok: false, errorMessage: 'ESTA ID AULA YA EXISTE' });
-        } else if (newAula.nombreAula === aulas[i].nombreAula) {
-            return res.status(500).json({ ok: false, errorMessage: 'NO PUEDE HABER DOS AULAS CON EL MISMO NOMBRE' });
-        }
-    }
 
     await Escuela.findOne({ idEscuela }).then(escuela => {
         escuela.aulas.push(newAula);
@@ -47,7 +37,7 @@ router.get('/getAllAulas/:idEscuela', (req, res) => {
 
 //* get aula by id
 router.get('/getAulaById/:idAula', (req, res) => {
-    Aula.findOne({ idAula: req.params.idAula }).then(aulaa => {
+    Aula.findById(req.params.idAula).then(aulaa => {
         res.status(200).send(aulaa);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULAS' });

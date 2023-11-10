@@ -1,35 +1,45 @@
 const { Router } = require('express');
 const router = Router();
 
+const verifyToken = require('../helpers/verifyToken');
 const Escuela = require('../models/Escuela');
+const User = require('../models/User');
 
 //* post escuela
-router.post('/newEscuela', async (req, res) => {
-    const { idEscuela, nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen } = req.body;
-    const nuevaEscuela = new Escuela({ idEscuela, nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen });
+router.post('/newEscuela', verifyToken, async (req, res) => {
     
-    if (!idEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El idEscuela es Requerido' }) };
-    if (!nombreEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El nombreEscuela es Requerido' }) };
-    if (!direccion) { return res.status(500).json({ ok: false, errorMessage: 'La direccion es Requerido' }) };
-    if (!ciudad) { return res.status(500).json({ ok: false, errorMessage: 'La ciudad es Requerido' }) };
-    if (!codigo_postal) { return res.status(500).json({ ok: false, errorMessage: 'El codigo_postal es Requerido' }) };
-    if (!provincia) { return res.status(500).json({ ok: false, errorMessage: 'El provincia es Requerido' }) };
-    
-    const escuelas = await Escuela.find();
-    for (let i = 0; i < escuelas.length; i++) {
-        if (nuevaEscuela.idEscuela === escuelas[i].idEscuela) {
-            return res.status(500).json({ ok: false, errorMessage: 'ESTA ID ESCUELA YA EXISTE' });
-        } else if (nuevaEscuela.nombreEscuela === escuelas[i].nombreEscuela) {
-            return res.status(500).json({ ok: false, errorMessage: 'NO PUEDE HABER DOS ESCUELAS CON EL MISMO NOMBRE' });
-        }
+    const { nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen } = req.body;
+
+    if (!nombreEscuela || !direccion || !ciudad || !codigo_postal || !provincia) {
+        return res.status(500).json({ ok: false, errorMessage: 'Todos los campos son requeridos' });
     }
 
-    nuevaEscuela.save().then(escuela => {
+    const escuelaExistente = await Escuela.findOne({ nombreEscuela });
+    if (escuelaExistente) {
+        return res.status(500).json({ ok: false, errorMessage: 'Esta escuela ya existe' });
+    }
+
+    const nuevaEscuela = Escuela({ nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen, });
+    nuevaEscuela.save();
+
+    const usuario = await User.findById(req.userId);
+    if (!usuario) {
+        return res.status(500).json({ ok: false, errorMessage: 'Usuario no encontrado' });
+    }
+
+    usuario.escuelas.push(nuevaEscuela);
+    await usuario.save();
+    Escuela.findByIdAndUpdate(nuevaEscuela._id, {
+        $set: {
+            user: usuario._id
+        }
+    }).then(escuela => {
         res.status(200).json({ ok: true, escuela });
-    }).catch( err => {
-        res.status(500).json({ ok: false, errorMessage: 'ERROR CREANDO ESCUELA' , err});
-    });
+    }).catch(err => {
+        res.status(500).json({ ok: false, errorMessage: err });
+    })
 });
+
 
 //* get escuelas
 router.get('/allEscuelas', (req, res) => {

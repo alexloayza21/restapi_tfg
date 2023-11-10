@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
-
-const Reserva = require('./Reserva');
+const Reserva = require('./Reserva').schema;
+const Escuela = require('./Escuela').schema;
 
 let userSchema = new Schema({
     username: {
@@ -29,8 +29,8 @@ let userSchema = new Schema({
         type: Boolean,
         default: false
     },
-
-    reservas: [Reserva]
+    reservas: [Reserva],
+    escuelas: [Escuela]
 });
 
 //* encriptar contraseña

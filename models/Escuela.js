@@ -2,10 +2,6 @@ const { Schema, model } = require('mongoose');
 const Aula = require('./Aula').schema;
 
 const escuelaSchema = new Schema({
-    idEscuela: {
-        type: String,
-        required: true
-    },
     nombreEscuela: {
         type: String,
         required: true
@@ -30,7 +26,11 @@ const escuelaSchema = new Schema({
         type: String,
         required: false
     },
-    aulas: [Aula]
+    aulas: [Aula],
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    }
 });
 
 module.exports = model('escuelas', escuelaSchema);
