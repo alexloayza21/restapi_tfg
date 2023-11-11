@@ -30,7 +30,8 @@ let userSchema = new Schema({
         default: false
     },
     reservas: [Reserva],
-    escuelas: [Escuela]
+    escuelas: [Escuela],
+    token: String
 });
 
 //* encriptar contraseña
