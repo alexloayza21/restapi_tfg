@@ -38,7 +38,7 @@ router.post('/signin', async (req, res, next) => {
 
     const validPassword = await user.validarPassword(password);
     if (!validPassword) {
-        return res.status(401).json({ auth: false, token: null });
+        return res.status(401).json({ auth: false, token: null , errorMessage: 'Contraseña Incorrecta'});
     }
     const token = jwt.sign({ id: user._id }, config.secret, {});
 
@@ -65,7 +65,7 @@ router.get('/usuario', verifyToken, async (req, res, next) => {
     });
 });
 
-//* perfil
+//* perfil reservas del usuario
 router.get('/getReservasUsuarios', verifyToken, async (req, res, next) => {
     await User.findById(req.userId, {password: 0}).then(usuario => {
         if (usuario) {

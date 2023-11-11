@@ -7,9 +7,9 @@ const User = require('../models/User');
 
 //*post reserva
 router.post('/newReserva', verifyToken, async (req, res, next) => {
-    const { fecha, hora_entrada, hora_salida, asientos} = req.body;
+    const { fecha, hora_entrada, hora_salida, nombreAula, asientos} = req.body;
     
-    const newReserva = new Reserva({ fecha, hora_entrada, hora_salida, asientos });
+    const newReserva = new Reserva({ fecha, hora_entrada, hora_salida, nombreAula, asientos });
     newReserva.save();
 
     await User.findById(req.userId).then(usuario => {
@@ -43,7 +43,7 @@ router.get('/reservasPorFecha/:date', (req, res) => {
 
     const fecha = req.params.date;
 
-    Reserva.find({ fecha },{user: 0, __v: 0}).then(reservas => {
+    Reserva.find({ fecha },{ __v: 0}).then(reservas => {
         res.status(200).send(reservas);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO RESERVAS' });
