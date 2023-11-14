@@ -55,7 +55,7 @@ router.post('/signin', async (req, res, next) => {
 });
 
 //* perfil
-router.get('/usuario', verifyToken, async (req, res, next) => {
+router.get('/auth', verifyToken, async (req, res, next) => {
     await User.findById(req.userId, {password: 0}).then(usuario => {
         if (usuario) {
             return res.status(200).json(usuario);

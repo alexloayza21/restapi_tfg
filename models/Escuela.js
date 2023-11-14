@@ -4,23 +4,23 @@ const Aula = require('./Aula').schema;
 const escuelaSchema = new Schema({
     nombreEscuela: {
         type: String,
-        required: true
+        required: false
     },
     direccion: {
         type: String,
-        required: true
+        required: false
     },
     ciudad: {
         type: String,
-        required: true
+        required: false
     },
     codigo_postal: {
         type: String,
-        required: true
+        required: false
     },
     provincia: {
         type: String,
-        required: true
+        required: false
     },
     imagen: {
         type: String,

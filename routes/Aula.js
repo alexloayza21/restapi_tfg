@@ -40,7 +40,7 @@ router.get('/getAulaById/:idAula', (req, res) => {
     Aula.findById(req.params.idAula).then(aulaa => {
         res.status(200).send(aulaa);
     }).catch(err => {
-        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULAS' });
+        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULA' });
     });
 });
 

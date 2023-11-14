@@ -8,6 +8,7 @@ const reservaSchema = new Schema({
     hora_salida: String,
     nombreAula: String,
     asientos: [Asiento],
+    idEscuela: String,
     user: User
 });
 

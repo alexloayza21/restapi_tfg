@@ -7,9 +7,9 @@ const User = require('../models/User');
 
 //*post reserva
 router.post('/newReserva', verifyToken, async (req, res, next) => {
-    const { fecha, hora_entrada, hora_salida, nombreAula, asientos} = req.body;
+    const { fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos} = req.body;
     
-    const newReserva = new Reserva({ fecha, hora_entrada, hora_salida, nombreAula, asientos });
+    const newReserva = new Reserva({ fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos });
     newReserva.save();
 
     await User.findById(req.userId).then(usuario => {

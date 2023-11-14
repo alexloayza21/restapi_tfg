@@ -12,7 +12,7 @@ router.post('/newAsiento/:idAula', async (req, res) => {
     const newAsiento = Asiento({ numeroAsiento, idAula });
 
     if (!idAula) { return res.status(500).json({ ok: false, errorMessage: 'El idAula es Requerido' }) };
-    if (numeroAsiento>20) { return res.status(500).json({ ok: false, errorMessage: 'Solo puede haber 20 asientos máximo' }) };
+    // if (numeroAsiento>20) { return res.status(500).json({ ok: false, errorMessage: 'Solo puede haber 20 asientos máximo' }) };
 
     const asientos = await Asiento.find({idAula});
     for (let i = 0; i < asientos.length; i++) {
@@ -21,11 +21,11 @@ router.post('/newAsiento/:idAula', async (req, res) => {
         }
     }
 
-    await Aula.findOne({ idAula }).then(aula => {
+    await Aula.findById(idAula).then(aula => {
         aula.asientos.push(newAsiento);
         aula.save();
 
-        Escuela.findOne({ idEscuela: aula.idEscuela }).then(escuela => {
+        Escuela.findById(aula.idEscuela).then(escuela => {
             escuela.aulas.forEach(aula => {
                 if (aula.idAula === idAula) {                  
                     aula.asientos.push(newAsiento);

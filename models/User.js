@@ -6,21 +6,21 @@ const Escuela = require('./Escuela').schema;
 let userSchema = new Schema({
     username: {
         type: String,
-        required: true,
+        required: false,
         minlength: 1,
         trim: true
     },
 
     email: {
         type: String,
-        required: true,
+        required: false,
         minlength: 1,
         trim: true
     },
 
     password:{
         type: String,
-        required: true,
+        required: false,
         minlength: 6,
         trim: true
     },

@@ -5,8 +5,8 @@ const asientoSchema = new Schema({
     hora_entrada: String,
     hora_salida:String,
     idAula: {
-        type: String, 
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'aulas'
     }
 }); 
 
