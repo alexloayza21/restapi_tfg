@@ -9,7 +9,11 @@ const reservaSchema = new Schema({
     nombreAula: String,
     asientos: [Asiento],
     idEscuela: String,
-    user: User
+    userName: String,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    }
 });
 
 module.exports = model('reservas', reservaSchema);

@@ -29,8 +29,10 @@ let userSchema = new Schema({
         type: Boolean,
         default: false
     },
-    reservas: [Reserva],
-    escuela: Escuela,
+    escuela: {
+        type: Schema.Types.ObjectId,
+        ref: 'escuelas'
+    },
     token: String
 });
 
