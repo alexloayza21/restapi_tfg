@@ -9,36 +9,31 @@ const User = require('../models/User');
 
 //* post escuela
 router.post('/newEscuela', verifyToken, async (req, res) => {
+
+    try {
     
-    const { nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen, aulas } = req.body;
-
-    if (!nombreEscuela || !direccion || !ciudad || !codigo_postal || !provincia) {
-        return res.status(500).json({ ok: false, errorMessage: 'Todos los campos son requeridos' });
-    }
-
-    const escuelaExistente = await Escuela.findOne({ nombreEscuela });
-    if (escuelaExistente) {
-        return res.status(500).json({ ok: false, errorMessage: 'Esta escuela ya existe' });
-    }
-
-    const nuevaEscuela = Escuela({ nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen, aulas});
-    nuevaEscuela.save();
-
-    const usuario = await User.findByIdAndUpdate(req.userId, {
-        $set: {
-            escuela: nuevaEscuela
-        }
-    },{new: true});
+        const { nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen } = req.body;
+        const userId = req.userId;
     
-    await Escuela.findByIdAndUpdate(nuevaEscuela._id, {
-        $set: {
-            user: usuario._id
+        if (!nombreEscuela || !direccion || !ciudad || !codigo_postal || !provincia) {
+            return res.status(500).json({ ok: false, errorMessage: 'Todos los campos son requeridos' });
         }
-    },{new: true}).then(escuela => {
-        res.status(200).json({ ok: true, escuela });
-    }).catch(err => {
+    
+        const escuelaExistente = await Escuela.findOne({ nombreEscuela });
+        if (escuelaExistente) {
+            return res.status(500).json({ ok: false, errorMessage: 'Esta escuela ya existe' });
+        }
+    
+        const nuevaEscuela = Escuela({ nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen, userId});
+        nuevaEscuela.save().then(escuela => {
+            res.status(200).json({ok: true, escuela})
+        }).catch(err => {
+            res.status(500).json({ok: false, errorMessage: 'ERROR CREANDO AULA'});
+        });
+        
+    } catch (error) {
         res.status(500).json({ ok: false, errorMessage: err });
-    })
+    }
 });
 
 

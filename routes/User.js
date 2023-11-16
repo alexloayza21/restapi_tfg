@@ -69,7 +69,7 @@ router.get('/auth', verifyToken, async (req, res, next) => {
 router.get('/getReservasUsuarios', verifyToken, async (req, res, next) => {
     await User.findById(req.userId, {password: 0}).then(usuario => {
         if (usuario) {
-            return res.status(200).json(usuario.reservas);
+            return res.status(200).send(usuario.reservas);
         } else {
             return res.status(404).json({ok: false, errorMessage: 'User not found'})
         }

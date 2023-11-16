@@ -5,25 +5,20 @@ const Escuela = require('../models/Escuela');
 const Aula = require('../models/Aula');
 
 //* post aula
-router.post('/newAula/:idEscuela', async (req, res) => {
-    const { idEscuela } = req.params;
-    const { nombreAula } = req.body;
-    const newAula = new Aula({ nombreAula, idEscuela });
-
-    if (!idEscuela) { return res.status(500).json({ ok: false, errorMessage: 'El idEscuela es Requerido' }) };
-
-    await Escuela.findOne({ idEscuela }).then(escuela => {
-        escuela.aulas.push(newAula);
-        escuela.save();
-    }).catch(err => {
-        res.status(500).json({ok: false, errorMessage: 'NO SE ECONTRÓ ESCUELA'})
-    });
-
-    newAula.save().then(aula => {
-        res.status(200).json({ok: true, aula})
-    }).catch(err => {
-        res.status(500).json({ok: false, errorMessage: 'ERROR CREANDO AULA'});
-    });
+router.post('/newAula', async (req, res) => {
+    try {
+        const { nombreAula, hora_entrada, hora_salida, mediaHora, idEscuela, asientos } = req.body;
+        const newAula = new Aula({ nombreAula, hora_entrada, hora_salida, mediaHora, idEscuela, asientos });
+    
+        newAula.save().then(aula => {
+            res.status(200).json({ok: true, aula})
+        }).catch(err => {
+            res.status(500).json({ok: false, errorMessage: 'ERROR CREANDO AULA'});
+        });
+        
+    } catch (error) {
+        res.status(400).json({ok: false, errorMessage: error});
+    }
 });
 
 //* get aulas by idEscuela
@@ -42,6 +37,21 @@ router.get('/getAulaById/:idAula', (req, res) => {
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULA' });
     });
+});
+
+//* update aula
+router.patch('/updateAula/:id', async (req, res) => {
+    const aulaId = req.params.id;
+    const updateData = req.body;
+
+    const aula = await Aula.findById(aulaId);
+    if (!aula) {
+        return res.status(404).json({ ok: false, errorMessage: 'Aula no encontrada' });
+    }
+
+    Object.assign(aula, updateData);
+    await aula.save();
+    return res.json({ ok: true, aula });
 });
 
 

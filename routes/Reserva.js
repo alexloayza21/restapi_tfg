@@ -7,24 +7,14 @@ const User = require('../models/User');
 
 //*post reserva
 router.post('/newReserva', verifyToken, async (req, res, next) => {
-    const { fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos} = req.body;
+    const { fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos, userName } = req.body;
+    const userId = req.userId
     
-    const newReserva = new Reserva({ fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos });
-    newReserva.save();
-
-    await User.findById(req.userId).then(usuario => {
-        usuario.reservas.push(newReserva);
-        usuario.save();
-
-        Reserva.findByIdAndUpdate(newReserva._id,{
-            $set: {
-                user: usuario
-            }
-        }).then(reserva => {
-            res.status(200).json({ ok: true, reserva });
-        });
+    const newReserva = new Reserva({ fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos, userName, userId });
+    newReserva.save().then(reserva => {
+        res.status(200).json({ ok: true, reserva });
     }).catch(err => {
-        res.status(500).json({ ok: false, errorMessage: 'ERROR AGREGANDO RESERVAS A USUARIO' });
+        res.status(500).json({ ok: false, errorMessage: 'Error creando reserva' });
     });
 
 });

@@ -8,7 +8,7 @@ const escuelaSchema = new Schema({
     codigo_postal: String,
     provincia: String,
     imagen: String,
-    user: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: 'users'
     }

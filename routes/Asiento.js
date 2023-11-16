@@ -4,7 +4,7 @@ const router = Router();
 const Aula = require('../models/Aula');
 const Asiento = require('../models/Asiento');
 const Escuela = require('../models/Escuela');
-
+//* TODO ESTO SOBRA
 //*post asiento
 router.post('/newAsiento/:idAula', async (req, res) => {
     const { idAula } = req.params;
