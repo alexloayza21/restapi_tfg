@@ -29,7 +29,7 @@ let userSchema = new Schema({
         type: Boolean,
         default: false
     },
-    escuela: {
+    idEscuela: {
         type: Schema.Types.ObjectId,
         ref: 'escuelas'
     },

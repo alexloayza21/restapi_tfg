@@ -9,7 +9,7 @@ const reservaSchema = new Schema({
     nombreAula: String,
     asientos: [Asiento],
     idEscuela: String,
-    userName: String,
+    username: String,
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'users'

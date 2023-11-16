@@ -36,6 +36,14 @@ router.post('/newEscuela', verifyToken, async (req, res) => {
     }
 });
 
+//* get escuela by userId
+router.get('/getEscuelaByUserId/:id', (req, res) => {
+    Escuela.findOne({userId: req.params.id}).then(escuela => {
+        res.status(200).send(escuela);
+    }).catch(err => {
+        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO ESCUELA' });
+    });
+});
 
 //* get escuelas
 router.get('/allEscuelas', (req, res) => {

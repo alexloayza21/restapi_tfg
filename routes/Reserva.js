@@ -40,4 +40,16 @@ router.get('/reservasPorFecha/:date', (req, res) => {
     });
 });
 
+//* get reservas por idUser
+router.get('/reservasByUserId/:userId', (req, res) => {
+
+    const userId = req.params.userId;
+
+    Reserva.find({ userId },{ __v: 0}).then(reservas => {
+        res.status(200).send(reservas);
+    }).catch(err => {
+        res.status(404).json({ ok: false, errorMessage: err });
+    });
+});
+
 module.exports = router;
