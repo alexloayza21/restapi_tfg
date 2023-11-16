@@ -30,7 +30,7 @@ let userSchema = new Schema({
         default: false
     },
     reservas: [Reserva],
-    escuelas: [Escuela],
+    escuela: Escuela,
     token: String
 });
 

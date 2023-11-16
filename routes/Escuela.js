@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const multer = require('multer')
 const router = Router();
+const path = require('path');
 
 const verifyToken = require('../helpers/verifyToken');
 const Escuela = require('../models/Escuela');
@@ -23,18 +24,17 @@ router.post('/newEscuela', verifyToken, async (req, res) => {
     const nuevaEscuela = Escuela({ nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen, aulas});
     nuevaEscuela.save();
 
-    const usuario = await User.findById(req.userId);
-    if (!usuario) {
-        return res.status(500).json({ ok: false, errorMessage: 'Usuario no encontrado' });
-    }
-
-    usuario.escuelas.push(nuevaEscuela);
-    await usuario.save();
-    Escuela.findByIdAndUpdate(nuevaEscuela._id, {
+    const usuario = await User.findByIdAndUpdate(req.userId, {
+        $set: {
+            escuela: nuevaEscuela
+        }
+    },{new: true});
+    
+    await Escuela.findByIdAndUpdate(nuevaEscuela._id, {
         $set: {
             user: usuario._id
         }
-    }).then(escuela => {
+    },{new: true}).then(escuela => {
         res.status(200).json({ ok: true, escuela });
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: err });
@@ -60,6 +60,7 @@ router.get('/getEscuelaById/:id', (req, res) => {
     });
 });
 
+//* update escuela
 router.patch('/updateEscuelas/:id', async (req, res) => {
     const escuelaId = req.params.id;
     const updatedData = req.body;
@@ -74,9 +75,11 @@ router.patch('/updateEscuelas/:id', async (req, res) => {
     return res.json({ ok: true, escuela });
 });
 
+
+//*-------------------- imagen --------------------
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, './uploads/');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
@@ -84,23 +87,28 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-router.post('/uploadImage/:idEscuela', upload.single('file', async (req, res) => {
+router.post('/uploadImage', upload.single('file'), async (req, res) => {
     try {
-        const escuelaId = req.params.idEscuela;
-        const imagenPath = req.file.path;
-
-        const escuela = await Escuela.findById(escuelaId);
-        escuela.imagen = imagenPath;
-        await escuela.save();
-
-        res.status(200).json({ ok: true, escuela });
-
+        const fileName = req.file.filename;
+        const filePath = path.join(__dirname, 'uploads', fileName);
+        res.json({ ok: true, message: 'Archivo subido correctamente', fileName, filePath });
     } catch (error) {
         res.status(500).json({ ok: false, messageError: 'ERROR'})
     }
-}));
+});
 
+const uploadsDir = path.join(__dirname, '..', 'uploads');
+router.get('/downloadImage/:filename', (req, res) => {
+    try {
+      const filename = req.params.filename;
+      const filePath = path.join(uploadsDir, filename);
+      
+      // Envia el archivo como respuesta al cliente
+      res.sendFile(filePath);
+    } catch (error) {
+      res.status(500).json({ ok: false, messageError: 'ERROR' });
+    }
+  });
 
 
 module.exports = router;
