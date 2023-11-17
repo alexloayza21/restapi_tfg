@@ -20,8 +20,8 @@ router.post('/newReserva', verifyToken, async (req, res, next) => {
 });
 
 //* get todas las reservas
-router.get('/allReservas', (req, res) => {
-    Reserva.find().then(reservas => {
+router.get('/allReservas', async (req, res) => {
+    await Reserva.find().then(reservas => {
         res.status(200).send(reservas);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'NO HAY RESERVAS' });
@@ -29,23 +29,24 @@ router.get('/allReservas', (req, res) => {
 });
 
 //* get reservas por fecha
-router.get('/reservasPorFecha/:date', (req, res) => {
+router.get('/reservasPorFecha/:date', async (req, res) => {
 
-    const fecha = req.params.date;
+    try {
+        const fecha = req.params.date;
 
-    Reserva.find({ fecha },{ __v: 0}).then(reservas => {
+        const reservas = await Reserva.find({ fecha },{ __v: 0})
         res.status(200).send(reservas);
-    }).catch(err => {
-        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO RESERVAS' });
-    });
+    } catch (error) {
+        res.status(500).json({ ok: false, error });
+    }
 });
 
 //* get reservas por idUser
-router.get('/reservasByUserId/:userId', (req, res) => {
+router.get('/reservasByUserId/:userId', async (req, res) => {
 
     const userId = req.params.userId;
 
-    Reserva.find({ userId },{ __v: 0}).then(reservas => {
+    await Reserva.find({ userId },{ __v: 0}).then(reservas => {
         res.status(200).send(reservas);
     }).catch(err => {
         res.status(404).json({ ok: false, errorMessage: err });

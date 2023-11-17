@@ -10,11 +10,16 @@ router.post('/newAula', async (req, res) => {
         const { nombreAula, hora_entrada, hora_salida, mediaHora, idEscuela, asientos } = req.body;
         const newAula = new Aula({ nombreAula, hora_entrada, hora_salida, mediaHora, idEscuela, asientos });
     
-        newAula.save().then(aula => {
-            res.status(200).json({ok: true, aula})
-        }).catch(err => {
-            res.status(500).json({ok: false, errorMessage: 'ERROR CREANDO AULA'});
+        await newAula.save();
+
+        const idAula = newAula._id;
+        await Aula.findByIdAndUpdate(idAula, {
+            $set: {
+                'asientos.$[].idAula': idAula
+            }
         });
+
+        res.status(200).send(newAula);
         
     } catch (error) {
         res.status(400).json({ok: false, errorMessage: error});
@@ -22,8 +27,8 @@ router.post('/newAula', async (req, res) => {
 });
 
 //* get aulas by idEscuela
-router.get('/getAllAulas/:idEscuela', (req, res) => {
-    Aula.find({ idEscuela: req.params.idEscuela }).then(aulas => {
+router.get('/getAllAulas/:idEscuela', async (req, res) => {
+    await Aula.find({ idEscuela: req.params.idEscuela }).then(aulas => {
         res.status(200).send(aulas);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULAS' });
@@ -31,8 +36,8 @@ router.get('/getAllAulas/:idEscuela', (req, res) => {
 });
 
 //* get aula by id
-router.get('/getAulaById/:idAula', (req, res) => {
-    Aula.findById(req.params.idAula).then(aulaa => {
+router.get('/getAulaById/:idAula', async (req, res) => {
+    await Aula.findById(req.params.idAula).then(aulaa => {
         res.status(200).send(aulaa);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO AULA' });

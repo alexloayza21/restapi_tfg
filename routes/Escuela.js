@@ -36,18 +36,10 @@ router.post('/newEscuela', verifyToken, async (req, res) => {
     }
 });
 
-//* get escuela by userId
-router.get('/getEscuelaByUserId/:id', (req, res) => {
-    Escuela.findOne({userId: req.params.id}).then(escuela => {
-        res.status(200).send(escuela);
-    }).catch(err => {
-        res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO ESCUELA' });
-    });
-});
 
 //* get escuelas
-router.get('/allEscuelas', (req, res) => {
-    Escuela.find().then(escuelas => {
+router.get('/allEscuelas', async (req, res) => {
+    await Escuela.find().then(escuelas => {
         res.status(200).send(escuelas);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO LAS ESCUELAS' });
@@ -55,8 +47,8 @@ router.get('/allEscuelas', (req, res) => {
 });
 
 //* get escuelaById
-router.get('/getEscuelaById/:id', (req, res) => {
-    Escuela.findById(req.params.id).then(escuela => {
+router.get('/getEscuelaById/:id', async (req, res) => {
+    await Escuela.findById(req.params.id).then(escuela => {
         res.status(200).send(escuela);
     }).catch(err => {
         res.status(500).json({ ok: false, errorMessage: 'ERROR BUSCANDO ESCUELA' });
@@ -106,7 +98,6 @@ router.get('/downloadImage/:filename', (req, res) => {
       const filename = req.params.filename;
       const filePath = path.join(uploadsDir, filename);
       
-      // Envia el archivo como respuesta al cliente
       res.sendFile(filePath);
     } catch (error) {
       res.status(500).json({ ok: false, messageError: 'ERROR' });

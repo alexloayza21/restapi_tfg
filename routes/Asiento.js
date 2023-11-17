@@ -49,4 +49,11 @@ router.post('/newAsiento/:idAula', async (req, res) => {
     });
 }); 
 
+router.get('/asientosByIdEscuela/:idEscuela', async (req, res) => {
+    const idEscuela = req.params.idEscuela;
+    Aula.findOne({ idEscuela: idEscuela }).then(aula => {
+        res.status(200).send(aula.asientos);
+    });
+});
+
 module.exports = router;
