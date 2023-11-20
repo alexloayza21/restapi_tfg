@@ -1,3 +1,4 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-mongoose.connect('mongodb://127.0.0.1/reservas').then(db => console.log('Database connected'));
+mongoose.connect(process.env.MONGODB_URI).then(db => console.log('Database connected')).catch((error) => console.error(error));
