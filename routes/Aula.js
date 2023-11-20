@@ -46,17 +46,33 @@ router.get('/getAulaById/:idAula', async (req, res) => {
 
 //* update aula
 router.patch('/updateAula/:id', async (req, res) => {
-    const aulaId = req.params.id;
-    const updateData = req.body;
+    try {
+        const { nombreAula, hora_entrada, hora_salida, mediaHora, idEscuela, asientos } = req.body;
+        const idAula = req.params.id;
 
-    const aula = await Aula.findById(aulaId);
-    if (!aula) {
-        return res.status(404).json({ ok: false, errorMessage: 'Aula no encontrada' });
+        await Aula.findByIdAndUpdate(idAula, {
+            $set: {
+                nombreAula,
+                hora_entrada,
+                hora_salida,
+                mediaHora,
+                idEscuela,
+                asientos
+            }
+        });
+
+        await Aula.updateOne({ _id: idAula, 'asientos.idAula': { $ne: idAula } }, {
+            $set: {
+                'asientos.$[].idAula': idAula
+            }
+        });
+
+        res.status(200).json({ ok: true, message: 'Aula actualizada exitosamente' });
+
+    } catch (error) {
+        res.status(400).json({ ok: false, errorMessage: error.message });
     }
 
-    Object.assign(aula, updateData);
-    await aula.save();
-    return res.json({ ok: true, aula });
 });
 
 

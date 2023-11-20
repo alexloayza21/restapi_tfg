@@ -4,13 +4,29 @@ const router = Router();
 const verifyToken = require('../helpers/verifyToken');
 const Reserva = require('../models/Reserva');
 const User = require('../models/User');
+const Aula = require('../models/Aula');
 
 //*post reserva
 router.post('/newReserva', verifyToken, async (req, res, next) => {
-    const { fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos, userName } = req.body;
+    const { fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos, nombreEscuela } = req.body;
     const userId = req.userId
+
+    const user = await User.findById(userId);
     
-    const newReserva = new Reserva({ fecha, hora_entrada, hora_salida, nombreAula, idEscuela, asientos, userName, userId });
+    const newReserva = new Reserva({
+        fecha,
+        hora_entrada,
+        hora_salida,
+        nombreAula,
+        idEscuela,
+        asientos,
+        nombreEscuela,
+        username : user.username,
+        userId : user._id
+    });
+
+    const aula = await Aula.findOne({ nombreAula });
+
     newReserva.save().then(reserva => {
         res.status(200).json({ ok: true, reserva });
     }).catch(err => {
@@ -51,6 +67,22 @@ router.get('/reservasByUserId/:userId', async (req, res) => {
     }).catch(err => {
         res.status(404).json({ ok: false, errorMessage: err });
     });
+});
+
+//* delete reserva by id
+router.delete('/deleteReservaByid/:id', async (req, res) => {
+    try {
+        
+        const idReserva = req.params.id;
+        const deletedReserva = await Reserva.findByIdAndDelete(idReserva);
+        if (!deletedReserva) {
+            return res.status(404).json({ok:false, errorMessage: 'Reserva no encontrada'})
+        }
+
+        res.status(200).json({ ok: true, message: 'Reserva eliminada correctamente', deletedReserva });
+    } catch (error) {
+        res.status(500).json({ ok: false, errorMessage: error });
+    }
 });
 
 module.exports = router;

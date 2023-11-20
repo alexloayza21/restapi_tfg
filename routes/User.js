@@ -33,7 +33,7 @@ router.post('/signin', async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-        return res.status(404).json({ ok: false, errorMessage: 'Este email no existe' });
+        return res.status(404).json({ ok: false, errorMessage: 'Email incorrecto' });
     }
 
     const validPassword = await user.validarPassword(password);

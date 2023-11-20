@@ -25,6 +25,13 @@ router.post('/newEscuela', verifyToken, async (req, res) => {
         }
     
         const nuevaEscuela = Escuela({ nombreEscuela, direccion, ciudad, codigo_postal, provincia, imagen, userId});
+
+        await User.findByIdAndUpdate(userId, {
+            $set: {
+                idEscuela: nuevaEscuela._id
+            }
+        });
+
         nuevaEscuela.save().then(escuela => {
             res.status(200).json({ok: true, escuela})
         }).catch(err => {
@@ -57,17 +64,22 @@ router.get('/getEscuelaById/:id', async (req, res) => {
 
 //* update escuela
 router.patch('/updateEscuelas/:id', async (req, res) => {
-    const escuelaId = req.params.id;
-    const updatedData = req.body;
-
-    const escuela = await Escuela.findById(escuelaId);
-    if (!escuela) {
-        return res.status(404).json({ ok:false, errorMessage: 'Escuela no encontrada' });
+    try {
+        const escuelaId = req.params.id;
+        const updatedData = req.body;
+    
+        const escuela = await Escuela.findById(escuelaId);
+        if (!escuela) {
+            return res.status(404).json({ ok:false, errorMessage: 'Escuela no encontrada' });
+        }
+    
+        Object.assign(escuela, updatedData);
+        await escuela.save();
+        return res.json({ ok: true, escuela });
+        
+    } catch (error) {
+        res.json({ ok: false, errorMessage: error });
     }
-
-    Object.assign(escuela, updatedData);
-    await escuela.save();
-    return res.json({ ok: true, escuela });
 });
 
 
