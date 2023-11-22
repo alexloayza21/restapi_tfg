@@ -76,7 +76,7 @@ router.patch('/updateAula/:id', async (req, res) => {
 });
 
 //*delete aula
-router.delete('deleteAula/:id', async (req, res) => {
+router.delete('/deleteAula/:id', async (req, res) => {
     try {
         await Aula.findByIdAndDelete(req.params.id).then(aula => {
             res.status(200).send(aula);
