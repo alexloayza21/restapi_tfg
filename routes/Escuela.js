@@ -95,7 +95,7 @@ router.delete('/deleteEscuela/:id', async (req, res) => {
         Aula.deleteMany({ idEscuela: req.params.id });
         
     } catch (error) {
-        res.status(400).json({ ok: false, error });
+        res.status(404).json({ ok: false, error });
     }
 });
 
