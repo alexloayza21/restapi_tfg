@@ -87,10 +87,11 @@ router.patch('/updateEscuelas/:id', async (req, res) => {
 router.delete('/deleteEscuela/:id', async (req, res) => {
 
     try {
-    
-        await Aula.deleteMany({ idEscuela: req.params.id });
 
         await Escuela.findByIdAndDelete(req.params.id).then(escuela => {
+
+            Aula.deleteMany({idEscuela: escuela.id});
+
             res.status(200).send(escuela);
         });
         
