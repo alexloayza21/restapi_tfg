@@ -6,6 +6,7 @@ const path = require('path');
 const verifyToken = require('../helpers/verifyToken');
 const Escuela = require('../models/Escuela');
 const User = require('../models/User');
+const Aula = require('../models/Aula');
 
 //* post escuela
 router.post('/newEscuela', verifyToken, async (req, res) => {
@@ -79,6 +80,22 @@ router.patch('/updateEscuelas/:id', async (req, res) => {
         
     } catch (error) {
         res.json({ ok: false, errorMessage: error });
+    }
+});
+
+//* delete escuela
+router.delete('deleteEscuela/:id', async (req, res) => {
+
+    try {
+
+        await Escuela.findByIdAndDelete(req.params.id).then(escuela => {
+            res.status(200).send(escuela);
+        });
+    
+        Aula.deleteMany({ idEscuela: req.params.id });
+        
+    } catch (error) {
+        res.status(400).json({ ok: false, error });
     }
 });
 
