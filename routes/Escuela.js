@@ -84,7 +84,7 @@ router.patch('/updateEscuelas/:id', async (req, res) => {
 });
 
 //* delete escuela
-router.delete('deleteEscuela/:id', async (req, res) => {
+router.delete('/deleteEscuela/:id', async (req, res) => {
 
     try {
 
