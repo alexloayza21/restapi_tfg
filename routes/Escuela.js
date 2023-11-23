@@ -63,6 +63,15 @@ router.get('/getEscuelaById/:id', async (req, res) => {
     });
 });
 
+//* get escuela by idUser
+router.get('/getEscuelaByIdUser/:id', async (req, res) => {
+    await Escuela.findOne({ userId: req.params.id }).then(escuela => {
+        res.status(200).send(escuela);
+    }).catch(error => {
+        res.status(500).json({ ok: false, error });
+    });
+});
+
 //* update escuela
 router.patch('/updateEscuelas/:id', async (req, res) => {
     try {
