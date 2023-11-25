@@ -100,7 +100,7 @@ router.delete('/deleteEscuela/:id', async (req, res) => {
         await Escuela.findByIdAndDelete(req.params.id).then(escuela => {
 
             Aula.deleteMany({ idEscuela: escuela.id });
-            User.findOneAndUpdate({ idEscuela: escuela.id }, {
+            User.findOneAndUpdate({ idEscuela: escuela._id }, {
                 $set: {
                     idEscuela: null
                 }
