@@ -50,7 +50,7 @@ router.patch('/updateAula/:id', async (req, res) => {
         const { nombreAula, hora_entrada, hora_salida, mediaHora, idEscuela, asientos } = req.body;
         const idAula = req.params.id;
 
-        await Aula.findByIdAndUpdate(idAula, {
+        const aula = await Aula.findByIdAndUpdate(idAula, {
             $set: {
                 nombreAula,
                 hora_entrada,
@@ -61,14 +61,13 @@ router.patch('/updateAula/:id', async (req, res) => {
             }
         });
 
-        await Aula.updateOne({ _id: idAula, 'asientos.idAula': { $ne: idAula } }, {
+        await Aula.updateOne({ _id: aula._id, 'asientos.idAula': { $ne: idAula } }, {
             $set: {
                 'asientos.$[].idAula': idAula
             }
         });
 
-        res.status(200).json({ ok: true, message: 'Aula actualizada exitosamente' });
-
+        res.status(200).send(aula);
     } catch (error) {
         res.status(400).json({ ok: false, errorMessage: error.message });
     }

@@ -34,7 +34,7 @@ router.post('/newEscuela', verifyToken, async (req, res) => {
         });
 
         nuevaEscuela.save().then(escuela => {
-            res.status(200).json({ok: true, escuela})
+            res.status(200).send(escuela);
         }).catch(err => {
             res.status(500).json({ok: false, errorMessage: 'ERROR CREANDO AULA'});
         });
@@ -85,7 +85,7 @@ router.patch('/updateEscuelas/:id', async (req, res) => {
     
         Object.assign(escuela, updatedData);
         await escuela.save();
-        return res.json({ ok: true, escuela });
+        return res.status(200).send(escuela);
         
     } catch (error) {
         res.json({ ok: false, errorMessage: error });
@@ -97,18 +97,17 @@ router.delete('/deleteEscuela/:id', async (req, res) => {
 
     try {
 
-        await Escuela.findByIdAndDelete(req.params.id).then(escuela => {
-
-            Aula.deleteMany({ idEscuela: escuela.id });
-            User.findOneAndUpdate({ idEscuela: escuela._id }, {
-                $set: {
-                    idEscuela: null
-                }
-            });
-
-            res.status(200).send(escuela);
-        });
+        const escuela = await Escuela.findByIdAndDelete(req.params.id);
         
+
+        await Aula.deleteMany({ idEscuela: escuela.id });
+        await User.updateMany({ idEscuela: escuela.id }, {
+            $unset: {
+                idEscuela: 0
+            }
+        });
+
+        res.status(200).send(escuela);
     } catch (error) {
         res.status(404).json({ ok: false, error });
     }
