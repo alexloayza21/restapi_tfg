@@ -65,11 +65,14 @@ router.get('/getEscuelaById/:id', async (req, res) => {
 
 //* get escuela by idUser
 router.get('/getEscuelaByIdUser/:id', async (req, res) => {
-    await Escuela.findOne({ userId: req.params.id }).then(escuela => {
+    try {
+        
+        const escuela = await Escuela.findOne({ userId: req.params.id })
         res.status(200).send(escuela);
-    }).catch(error => {
+    } catch (error) {
         res.status(500).json({ ok: false, error });
-    });
+        
+    }
 });
 
 //* update escuela

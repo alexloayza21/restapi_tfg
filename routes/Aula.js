@@ -59,7 +59,7 @@ router.patch('/updateAula/:id', async (req, res) => {
                 idEscuela,
                 asientos
             }
-        });
+        }, {new: true}); //* devuelve el documento actualizado
 
         await Aula.updateOne({ _id: aula._id, 'asientos.idAula': { $ne: idAula } }, {
             $set: {
