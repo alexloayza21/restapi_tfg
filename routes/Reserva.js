@@ -79,7 +79,7 @@ router.delete('/deleteReservaByid/:id', async (req, res) => {
             return res.status(404).json({ok:false, errorMessage: 'Reserva no encontrada'})
         }
 
-        res.status(200).json({ ok: true, message: 'Reserva eliminada correctamente', deletedReserva });
+        res.status(200).send(deletedReserva);
     } catch (error) {
         res.status(500).json({ ok: false, errorMessage: error });
     }
