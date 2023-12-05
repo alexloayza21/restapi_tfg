@@ -10,6 +10,14 @@ const User = require('../models/User');
 //* registrar
 router.post('/signup', async (req, res) => {
     const { username, email, password, admin } = req.body;
+    const mail = await User.findOne({ email });
+    if (mail) {
+        return res.status(404).json({ ok: false, errorMessage: 'Este Email Ya Existe' });
+    }
+    const name = await User.findOne({ username });
+    if (name) {
+        return res.status(404).json({ ok: false, errorMessage: 'Este Nombre de Usuario Ya Existe' });
+    }
     const user = new User({ username, email, password, admin });
     user.password = await user.encryptPassword(user.password);
 
@@ -20,7 +28,7 @@ router.post('/signup', async (req, res) => {
         $set: {
             token: token
         }
-    }).then(user => {
+    }, {new: true}).then(user => {
         res.status(200).send(user);
     }).catch(err => {
         res.status(400).json({ ok: false, errorMessage: err });
@@ -46,7 +54,7 @@ router.post('/signin', async (req, res, next) => {
         $set: {
             token: token
         }
-    }).then(user => {
+    }, {new: true}).then(user => {
         res.status(200).send(user);
     }).catch(err => {
         res.status(400).json({ ok: false, errorMessage: err });

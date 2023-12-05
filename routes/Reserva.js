@@ -46,7 +46,6 @@ router.get('/allReservas', async (req, res) => {
 
 //* get reservas por fecha
 router.get('/reservasPorFecha/:date', async (req, res) => {
-
     try {
         const fecha = req.params.date;
 
